@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./button.js"></script>
+    <script src="classes/snake.js"></script>
+    <script src="./classes/food.js"></script>
+    
+</head>
+<body>
+    <canvas id="game-screen" width="800" height="800" style="background-color: rgb(0, 0, 0);"></canvas>
+
+    <script>
+        let canvas = document.getElementById("game-screen");
+        let snake = new Snake(canvas, canvas.width/2, canvas.height/2);
+        let food = new Food(canvas, canvas.width/5, canvas.height/4)
+        
+
+        function main(){  
+            clearScreen(); 
+            food.drawFood();
+            snake.drawsnake(); //hien thi snake
+            eatFood();
+            requestAnimationFrame(main)
+        }
+        main();
+        
+        window.addEventListener("keydown",control) //di chuyen draw
+        function control(evt){  //nhan ban phim di chuyen
+            console.log(evt.key)
+            snake.move(evt.key);
+        }
+
+        function clearScreen(){ //delete snake
+            let ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+
+        function checkCrash(obj1, obj2){
+            let left1 = obj1.x;
+            let right1 = obj1.x + obj1.width;
+            let top1 = obj1.y;
+            let button1 = obj1.y + obj1.height
+
+            let left2 = obj2.x;
+            let right2 = obj2.x + obj2.width;
+            let top2 = obj2.y;
+            let button2 = obj2.y + obj2.height
+
+            if(left1 > right2 || right1 < left2 || top1 > button2 || button1 < top2){
+                return false; //k va cham
+            }
+            return true; //va cham
+        }
+       
+
+       
+       function changePosition(){
+            let x = Math.floor(Math.random()*canvas.width);
+            let y = Math.floor(Math.random()*canvas.height);
+            food.x = x;
+            food.y = y;
+            tailLength++;
+              
+        }
+        function eatFood(){
+            if(checkCrash(snake,food)){
+                changePosition();
+            }
+        }
+</script>
+</body>
+</html>    
